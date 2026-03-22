@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URI}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000
+
+logging:
+  level:
+    com.bytechat: DEBUG
+    org.springframework.security: INFO

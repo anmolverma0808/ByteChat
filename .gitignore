@@ -7,7 +7,6 @@ frontend/.angular/
 backend/target/
 backend/*.jar
 backend/*.war
-backend/src/main/resources/application.yml
 
 # ===== IDE =====
 .vscode/
@@ -25,3 +24,4 @@ application.properties
 
 # ===== docs =====
 docs/BYTECHAT_DOCUMENTATION.md
+docs/DEPLOYMENT.md

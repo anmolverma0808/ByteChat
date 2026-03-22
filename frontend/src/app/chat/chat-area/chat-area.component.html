@@ -1,0 +1,96 @@
+<div class="chat-area-container" [class.sidebar-open]="showInfoSidebar()">
+  <!-- Main Chat Content -->
+  <div class="chat-main">
+    <!-- Chat Header -->
+    <header class="chat-header">
+      <div class="contact-meta">
+        <button class="mobile-back-btn" (click)="back.emit()">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <div class="avatar">
+
+          <img *ngIf="contact.contactProfileImage" [src]="contact.contactProfileImage" [alt]="contact.contactName" class="avatar-img">
+          <span *ngIf="!contact.contactProfileImage">{{ getInitials(contact.contactName) }}</span>
+        </div>
+        <div class="info">
+          <h3>{{ contact.contactName }}</h3>
+          <span class="status" [class.online]="contact.online">{{ contact.online ? 'Online' : 'Offline' }}</span>
+        </div>
+      </div>
+      <div class="header-actions">
+          <button class="icon-btn" (click)="toggleInfoSidebar()">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
+      </div>
+    </header>
+
+  <!-- Message History -->
+  <div class="messages-viewport" #scrollMe>
+    <div *ngFor="let msg of messages(); trackBy: identifyMessage" 
+         class="message-row" 
+         [class.outgoing]="isOutgoing(msg)"
+         [id]="'msg-' + msg.id">
+      <div class="message-bubble" [class.highlight-message]="highlightedMessageId() === msg.id">
+        <div *ngIf="msg.messageType === 'TEXT'" class="text">{{ msg.message }}</div>
+        <div *ngIf="msg.messageType === 'FILE'" class="file-attachment">
+           <div class="file-icon">
+              <i class="bi bi-file-earmark-text"></i>
+           </div>
+           <div class="file-info">
+              <span class="file-name">{{ msg.message }}</span>
+              <a [href]="msg.fileUrl + '?name=' + msg.message" target="_blank" class="download-link">Download</a>
+           </div>
+        </div>
+        <div class="metadata">
+          {{ msg.createdAt | date:'shortTime' }}
+           <span *ngIf="isOutgoing(msg)" class="read-status" [class.read]="msg.readStatus">
+              ✓✓
+           </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message Input Area -->
+  <div class="chat-footer">
+    <div *ngIf="isContactTyping()" class="typing-indicator">
+      {{ contact.contactName }} is typing...
+    </div>
+    <app-message-input (messageSent)="onSendMessage($event)" (typing)="onTyping($event)"></app-message-input>
+  </div>
+  </div>
+
+  <!-- Contact Info Sidebar -->
+  <aside class="info-sidebar" [class.open]="showInfoSidebar()">
+    <header class="sidebar-header">
+      <button class="icon-btn" (click)="toggleInfoSidebar()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <h2>Contact Info</h2>
+    </header>
+
+    <div class="sidebar-content">
+      <div class="contact-card">
+        <div class="large-avatar">
+          <img *ngIf="contact.contactProfileImage" [src]="contact.contactProfileImage" [alt]="contact.contactName" class="avatar-img">
+          <span *ngIf="!contact.contactProfileImage">{{ getInitials(contact.contactName) }}</span>
+        </div>
+        <div class="primary-info">
+          <h3>{{ contact.contactName }}</h3>
+          <p class="bio">{{ contact.contactBio || 'Hey there! I am using ByteChat.' }}</p>
+        </div>
+      </div>
+
+      <div class="details-list">
+        <div class="detail-item">
+          <label>Email</label>
+          <div class="value">{{ contact.contactEmail }}</div>
+        </div>
+        <div class="detail-item">
+          <label>Phone Number</label>
+          <div class="value">{{ contact.contactPhone || 'No phone provided' }}</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>

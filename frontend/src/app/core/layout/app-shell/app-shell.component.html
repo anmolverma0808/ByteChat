@@ -1,0 +1,123 @@
+<div class="app-layout">
+  <!-- Top Header Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand">
+        <div class="logo-box">
+          <i class="bi bi-chat-fill"></i>
+        </div>
+        <span class="wordmark">ByteChat</span>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="header-search">
+        <div class="search-field">
+          <i class="bi bi-search"></i>
+          <input 
+            type="text" 
+            placeholder="Search messages..." 
+            [value]="searchQuery()"
+            (input)="onSearchInput($event)"
+            (focus)="onSearchFocus()"
+          />
+          <div class="search-spinner" *ngIf="isSearching()">
+            <div class="spinner-sm"></div>
+          </div>
+        </div>
+
+        <!-- Search Results Dropdown -->
+        <div class="search-results card shadow-lg" *ngIf="showSearchResults()">
+          <div class="search-results-content">
+            <div *ngFor="let result of searchResults()" class="search-result-item" (click)="selectSearchResult(result)">
+              <div class="result-avatar">
+                <img *ngIf="result.contactProfileImage" [src]="result.contactProfileImage" class="avatar-img">
+                <span *ngIf="!result.contactProfileImage">{{ result.contactName[0] }}</span>
+              </div>
+              <div class="result-info">
+                <div class="result-name">{{ result.contactName }}</div>
+                <div class="result-snippet" [innerHTML]="result.message.message"></div>
+                <div class="result-date">{{ result.message.createdAt | date:'MMM d, h:mm a' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button class="icon-btn theme-toggle" (click)="themeService.toggleTheme()" [title]="themeService.isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+        <i class="bi" [ngClass]="themeService.isDarkMode() ? 'bi-sun' : 'bi-moon'"></i>
+      </button>
+      <button class="icon-btn" title="Notifications">
+        <i class="bi bi-bell"></i>
+        <span *ngIf="notificationsEnabled && chatService.totalUnreadCount() > 0" class="badge-dot">
+          {{ chatService.totalUnreadCount() }}
+        </span>
+      </button>
+      <div class="user-profile-wrapper">
+        <div class="user-profile-trigger" (click)="toggleProfileMenu()">
+          <div class="avatar-sm">
+            <img *ngIf="userProfileImage" [src]="userProfileImage" alt="Profile" class="avatar-img">
+            <span *ngIf="!userProfileImage">{{ userInitials }}</span>
+          </div>
+          <i class="bi bi-chevron-down"></i>
+        </div>
+
+        <!-- Profile Dropdown Menu -->
+        <div class="profile-dropdown card" *ngIf="isProfileMenuOpen()">
+          <div class="dropdown-header">
+            <div class="avatar-md">
+              <img *ngIf="userProfileImage" [src]="userProfileImage" alt="Profile" class="avatar-img">
+              <span *ngIf="!userProfileImage">{{ userInitials }}</span>
+            </div>
+            <div class="user-info">
+              <div class="user-name">{{ userFullName }}</div>
+              <div class="user-email">{{ userEmail }}</div>
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <nav class="dropdown-nav">
+            <a routerLink="/app/profile" (click)="isProfileMenuOpen.set(false)" class="dropdown-item">
+              <i class="bi bi-person"></i> Profile Settings
+            </a>
+            <button (click)="logout()" class="dropdown-item text-danger">
+              <i class="bi bi-box-arrow-right"></i> Sign Out
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <!-- Icon-only Sidebar -->
+    <aside class="sidebar">
+      <nav class="nav-icons">
+        <a routerLink="/app/chat" routerLinkActive="active" class="nav-icon" title="Chats">
+          <i class="bi bi-chat-dots"></i>
+        </a>
+        <a routerLink="/app/files" routerLinkActive="active" class="nav-icon" title="Files">
+          <i class="bi bi-folder2"></i>
+        </a>
+        <a routerLink="/app/contacts" routerLinkActive="active" class="nav-icon" title="Contacts">
+          <i class="bi bi-people"></i>
+        </a>
+        <a routerLink="/app/settings" routerLinkActive="active" class="nav-icon" title="Settings">
+          <i class="bi bi-gear"></i>
+        </a>
+      </nav>
+
+      <div class="bottom-actions">
+        <button class="nav-icon logout-btn" (click)="logout()" title="Logout">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

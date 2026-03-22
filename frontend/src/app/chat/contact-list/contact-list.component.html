@@ -1,0 +1,47 @@
+<div class="contact-list-container">
+  <div class="panel-header">
+    <h2>Messages</h2>
+    <div class="tabs">
+      <button class="tab" [class.active]="activeTab() === 'all'" (click)="activeTab.set('all')">All</button>
+      <button class="tab" [class.active]="activeTab() === 'unread'" (click)="activeTab.set('unread')">Unread</button>
+    </div>
+    <div class="search-box">
+      <input type="text" placeholder="Search Contact..." class="pill-input" [(ngModel)]="searchTerm" />
+    </div>
+  </div>
+
+  <div class="scroll-area">
+    <div *ngIf="chatService.loadingContacts()" class="skeleton-loader">
+      <div class="sk-item"></div>
+      <div class="sk-item"></div>
+      <div class="sk-item"></div>
+    </div>
+
+    <div *ngIf="!chatService.loadingContacts() && filteredContacts().length === 0" class="empty-list text-muted">
+      No contacts found
+    </div>
+    <div *ngIf="!chatService.loadingContacts()" class="contacts-list">
+      <div *ngFor="let contact of filteredContacts(); trackBy: trackByContactId" class="contact-item"
+        [class.selected]="selectedContact?.id === contact.id" 
+        [class.deleted]="contact.deletedAccount"
+        (click)="contactSelected.emit(contact)">
+        <div class="avatar" [class.deleted-avatar]="contact.deletedAccount">
+          <img *ngIf="contact.contactProfileImage" [src]="contact.contactProfileImage" [alt]="contact.contactName"
+            class="avatar-img">
+          <span *ngIf="!contact.contactProfileImage" class="initials">{{ getInitials(contact.contactName) }}</span>
+          <span class="status-dot" *ngIf="!contact.deletedAccount" [class.online]="contact.online" [class.offline]="!contact.online"></span>
+        </div>
+        <div class="contact-info">
+          <div class="name-row">
+            <span class="name">{{ contact.contactName }}</span>
+            <span class="time">{{ contact.lastActive }}</span>
+          </div>
+          <div class="msg-row">
+            <span class="last-msg">{{ contact.lastMessage || 'Start a conversation' }}</span>
+            <span *ngIf="contact.unreadCount" class="badge">{{ contact.unreadCount }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

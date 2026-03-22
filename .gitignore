@@ -1,0 +1,27 @@
+# ===== Angular =====
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# ===== Spring Boot =====
+backend/target/
+backend/*.jar
+backend/*.war
+backend/src/main/resources/application.yml
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.iml
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Env / Secrets =====
+.env
+application.yml
+application.properties
+
+# ===== docs =====
+docs/BYTECHAT_DOCUMENTATION.md

@@ -1,0 +1,38 @@
+<div class="input-wrapper">
+   <button class="attach-btn" (click)="fileInput.click()">
+      <i class="bi bi-paperclip"></i>
+      <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
+   </button>
+   
+   <div class="input-container">
+      <input 
+        type="text" 
+        [(ngModel)]="messageText" 
+        (ngModelChange)="onTextChange()"
+        (keyup.enter)="send()" 
+        placeholder="Type a message..." 
+        class="pill-input" />
+      <button class="emoji-btn" (click)="toggleEmojiPicker()">
+        <i class="bi bi-emoji-smile"></i>
+      </button>
+
+      <div class="emoji-picker card" *ngIf="showEmojiPicker()">
+         <div class="emoji-grid">
+            <span *ngFor="let emoji of emojis" (click)="addEmoji(emoji)">{{ emoji }}</span>
+         </div>
+      </div>
+   </div>
+
+   <button class="send-btn" [disabled]="!messageText.trim() && !selectedFile()" (click)="send()">
+      <i class="bi bi-send-fill send-icon"></i>
+   </button>
+</div>
+
+<div *ngIf="selectedFile()" class="file-preview card">
+   <div class="file-meta">
+      <span>{{ selectedFile()?.name }}</span>
+      <button (click)="selectedFile.set(null)">
+        <i class="bi bi-x-lg"></i>
+      </button>
+   </div>
+</div>

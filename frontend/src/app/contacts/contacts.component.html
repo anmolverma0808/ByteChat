@@ -1,0 +1,88 @@
+<div class="contacts-layout" [class.has-selection]="selectedContact()">
+  <!-- List Pane -->
+  <aside class="list-pane">
+    <header class="list-header">
+       <h1>Contacts</h1>
+       <div class="search-box">
+          <input type="text" placeholder="Search contacts..." class="pill-input" (input)="onSearch($event)" />
+       </div>
+    </header>
+
+    <div class="contact-groups">
+       <div class="group" *ngFor="let group of filteredGroups()">
+          <div class="group-label">{{ group.letter }}</div>
+          <div class="contact-card" 
+               *ngFor="let contact of group.members"
+               [class.active]="selectedId() === contact.id"
+               (click)="selectedId.set(contact.id)">
+             <div class="mini-avatar">
+                <img *ngIf="contact.profileImage" [src]="contact.profileImage" [alt]="contact.fullName">
+                <span *ngIf="!contact.profileImage">{{ getInitials(contact.fullName) }}</span>
+                <span class="mini-status-dot" [class.online]="contact.online" [class.offline]="!contact.online"></span>
+             </div>
+             <div class="contact-info">
+                <span class="name">{{ contact.fullName }}</span>
+                <span class="status" [class.online-text]="contact.online">{{ contact.online ? 'Online' : 'Offline' }}</span>
+             </div>
+          </div>
+       </div>
+       
+       <div *ngIf="groups().length === 0" class="empty-state">
+         <p>No contacts found.</p>
+       </div>
+    </div>
+  </aside>
+
+  <!-- Detail Pane -->
+  <main class="detail-pane">
+     <div *ngIf="selectedContact()" class="contact-detail">
+        <header class="detail-header">
+           <button class="mobile-back-btn" (click)="onBack()">
+              <i class="bi bi-chevron-left"></i>
+           </button>
+        </header>
+        <div class="detail-body">
+           <div class="profile-hero">
+              <div class="large-avatar">
+                   <img *ngIf="selectedContact()?.profileImage" [src]="selectedContact()?.profileImage" [alt]="selectedContact()?.fullName">
+                   <span *ngIf="!selectedContact()?.profileImage">{{ getInitials(selectedContact()?.fullName || '') }}</span>
+              </div>
+
+              <h2>{{ selectedContact()?.fullName }}</h2>
+              <div class="status-indicator" [class.online]="selectedContact()?.online">
+                 <span class="dot"></span>
+                 {{ selectedContact()?.online ? 'Online' : 'Offline' }}
+              </div>
+              <p class="pronouns">{{ selectedContact()?.bio || 'No bio available' }}</p>
+              
+              <div class="action-row">
+                 <button class="btn btn-primary pill" (click)="onMessageClick(selectedContact()!)">Message</button>
+                 <button class="icon-btn-outline" title="Show Options">⋮</button>
+              </div>
+        </div>
+
+           <div class="info-grid">
+              <div class="info-section">
+                 <h3>Contact Information</h3>
+                 <div class="info-field">
+                    <label>Email Address</label>
+                    <span>{{ selectedContact()?.email }}</span>
+                 </div>
+                 <div class="info-field">
+                    <label>Phone Number</label>
+                    <span>{{ selectedContact()?.phone || 'Not provided' }}</span>
+                 </div>
+              </div>
+
+              <div class="info-section">
+                 <h3>Shared Media</h3>
+                 <div class="media-grid">
+                    <div class="media-item" *ngFor="let i of [1,2,3,4,5]"></div>
+                    <div class="media-item add-btn">+</div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </main>
+</div>

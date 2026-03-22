@@ -1,0 +1,11 @@
+<div class="modal-backdrop" *ngIf="modalService.activeModal() as modal" (click)="onBackdropClick($event)">
+  <div class="modal-container" [ngClass]="modal.size || 'md'">
+    <header class="modal-header">
+      <h2>{{ modal.title || 'Message' }}</h2>
+      <button class="close-btn" (click)="close()">✕</button>
+    </header>
+    <div class="modal-content">
+      <ng-container *ngComponentOutlet="modal.component"></ng-container>
+    </div>
+  </div>
+</div>

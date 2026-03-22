@@ -1,0 +1,116 @@
+<div class="files-layout">
+  <!-- Files Secondary Sidebar -->
+  <aside class="files-sidebar">
+    <div class="sidebar-header">
+      <button class="btn btn-primary btn-block upload-btn" (click)="openUploadModal()">
+        <i class="bi bi-plus-lg me-1"></i> Upload File
+      </button>
+    </div>
+
+    <div class="storage-stats">
+      <div class="storage-info">
+        <span class="storage-label">Storage Usage</span>
+        <span class="storage-percent">{{ storageInfo().percent }}%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width]="storageInfo().percent + '%'"></div>
+      </div>
+      <p class="storage-meta">{{ storageInfo().used }} of {{ storageInfo().total }} used</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="javascript:void(0)" class="nav-item" [class.active]="activeSidebarTab() === 'all'" (click)="setSidebarTab('all')">
+        <i class="bi bi-folder2 icon"></i> My Files
+      </a>
+      <a href="javascript:void(0)" class="nav-item" [class.active]="activeSidebarTab() === 'starred'" (click)="setSidebarTab('starred')">
+        <i class="bi bi-star icon" [class.bi-star-fill]="activeSidebarTab() === 'starred'"></i> Starred
+      </a>
+    </nav>
+  </aside>
+
+  <main class="files-main">
+    <header class="files-header">
+      <div class="header-title">
+        <h1>Files</h1>
+        <p class="subtitle">Manage and organize your team's documents</p>
+      </div>
+      <div class="header-search">
+        <div class="search-box">
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" placeholder="Search files, folders..." (input)="onSearch($event)" />
+        </div>
+      </div>
+    </header>
+
+    <div class="files-content-scroll">
+      <section class="quick-access">
+        <div class="section-header">
+          <h2>Quick Access</h2>
+        </div>
+        <div class="tiles-grid">
+          <div class="tile card" 
+               *ngFor="let cat of categories" 
+               [class.active]="selectedCategory() === mapCategoryToType(cat.name)"
+               (click)="toggleCategory(cat.name)">
+            <div class="tile-icon" [style.background-color]="cat.color + '1a'" [style.color]="cat.color">
+              <i [class]="cat.icon"></i>
+            </div>
+            <div class="tile-info">
+              <span class="cat-name">{{ cat.name }}</span>
+              <span class="file-count">{{ cat.count }} files</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="files-list">
+        <div class="section-header">
+          <h2>{{ selectedCategory() ? (selectedCategory() | titlecase) + ' Files' : (activeSidebarTab() === 'starred' ? 'Starred Files' : 'Recent Files') }}</h2>
+        </div>
+        <div class="table-container card">
+          <table class="files-table">
+            <thead>
+              <tr>
+                <th>NAME</th>
+                <th>LAST CREATED</th>
+                <th>SIZE</th>
+                <th>SENDER</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let file of displayedFiles">
+                <td>
+                  <div class="file-name-cell">
+                    <span class="file-icon-bg">
+                      <i [class]="getFileIcon(file.type)"></i>
+                    </span>
+                    <div class="name-meta">
+                      <a [href]="file.url" [download]="file.name" target="_blank" class="name clickable-name">{{ file.name }}</a>
+                      <span class="added">Added {{ file.addedAt }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ file.modifiedAt }}</td>
+                <td>{{ file.size }}</td>
+                <td>
+                  <span class="uploader-name" [class.you]="file.uploaderName === 'YOU'">
+                    {{ file.uploaderName }}
+                  </span>
+                </td>
+                <td>
+                  <button class="star-btn" [class.starred]="file.isStarred" (click)="toggleStar($event, file)" title="Star file">
+                    <i class="bi" [class.bi-star-fill]="file.isStarred" [class.bi-star]="!file.isStarred"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="displayedFiles.length === 0" class="p-4 text-center text-muted">
+            No files found.
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>

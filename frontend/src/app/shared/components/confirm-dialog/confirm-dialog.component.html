@@ -1,0 +1,15 @@
+<div class="confirm-dialog">
+  <div class="dialog-icon" [ngClass]="type">
+    <i *ngIf="type === 'danger'" class="bi bi-exclamation-triangle"></i>
+    <i *ngIf="type === 'warning'" class="bi bi-lightning-charge"></i>
+    <i *ngIf="type === 'info'" class="bi bi-info-circle"></i>
+  </div>
+  <div class="dialog-body">
+    <h3>{{ title }}</h3>
+    <p>{{ message }}</p>
+  </div>
+  <div class="dialog-actions">
+    <button class="btn btn-ghost" (click)="onCancel()">{{ cancelText }}</button>
+    <button class="btn" [ngClass]="type === 'danger' ? 'btn-danger' : 'btn-primary'" (click)="onConfirm()">{{ confirmText }}</button>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup shell script
+# ----------------------------------------------------------------------------
+set -e
+
+DIR=$(dirname "$0")
+JAR="$DIR/.mvn/wrapper/maven-wrapper.jar"
+MAIN="org.apache.maven.wrapper.MavenWrapperMain"
+
+if [ -n "$JAVA_HOME" ]; then
+    JAVA="$JAVA_HOME/bin/java"
+else
+    JAVA="java"
+fi
+
+exec "$JAVA" -Xmx512m -classpath "$JAR" "-Dmaven.multiModuleProjectDirectory=$DIR" "$MAIN" "$@"

@@ -1,0 +1,84 @@
+<div class="settings-container">
+   <header class="settings-header">
+      <h1>App Settings</h1>
+   </header>
+
+   <div class="settings-sections">
+      <!-- Account Section -->
+      <section class="settings-card card">
+         <h2>Profile Information</h2>
+         <div class="profile-edit">
+            <div class="avatar-upload">
+               <div class="avatar-container" (click)="fileInput.click()">
+                  <img *ngIf="profile()?.profileImage" [src]="profile()?.profileImage" class="avatar-img">
+                  <span *ngIf="!profile()?.profileImage">{{ userInitials }}</span>
+                  <div class="upload-overlay" *ngIf="uploading()">
+                     <div class="spinner"></div>
+                  </div>
+               </div>
+               <div class="avatar-info">
+                  <button class="btn btn-ghost" (click)="fileInput.click()">Change Avatar</button>
+                  <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" hidden />
+               </div>
+            </div>
+            <div class="form-grid">
+               <div class="form-group">
+                  <label>Full Name</label>
+                  <input type="text" class="pill-input" [value]="profile()?.fullName" disabled />
+                  <small class="help-text">Managed in Profile tab</small>
+               </div>
+               <div class="form-group">
+                  <label>Email Address</label>
+                  <input type="email" class="pill-input" [value]="profile()?.email" disabled />
+                  <small class="help-text">Primary login email</small>
+               </div>
+               <div class="form-group">
+                  <label>Avatar Name (Display Name)</label>
+                  <input type="text" class="pill-input" [(ngModel)]="avatarName" placeholder="Enter display name" />
+                  <small class="help-text">This is what others will see</small>
+               </div>
+            </div>
+            <div class="form-actions">
+               <button class="btn btn-primary" (click)="saveAvatarName()" [disabled]="loading()">
+                  {{ loading() ? 'Saving...' : 'Save Avatar Name' }}
+               </button>
+            </div>
+         </div>
+      </section>
+
+      <!-- Notifications Section -->
+      <section class="settings-card card">
+         <h2>Notifications</h2>
+         <div class="setting-row">
+            <div class="text">
+               <h3>Push Notifications</h3>
+               <p>Receive alerts for new messages</p>
+            </div>
+            <div class="toggle" [class.active]="notificationsEnabled()" (click)="toggleNotifications()">
+               <div class="thumb"></div>
+            </div>
+         </div>
+         <!-- <div class="setting-row">
+          <div class="text">
+             <h3>Email Digests</h3>
+             <p>Weekly summary of missed conversations</p>
+          </div>
+          <div class="toggle">
+             <div class="thumb"></div>
+          </div>
+       </div> -->
+      </section>
+
+      <!-- Danger Zone -->
+      <section class="settings-card card danger">
+         <h2>Danger Zone</h2>
+         <div class="setting-row">
+            <div class="text">
+               <h3>Deactivate Account</h3>
+               <p>This will permanently delete all your data and messages.</p>
+            </div>
+            <button class="btn btn-danger" (click)="onDeleteAccount()" [disabled]="loading()">Delete Account</button>
+         </div>
+      </section>
+   </div>
+</div>

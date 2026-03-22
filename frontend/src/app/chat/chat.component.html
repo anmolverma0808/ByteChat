@@ -1,0 +1,23 @@
+<div class="chat-layout" [class.has-selection]="selectedContact()">
+   <!-- Panel 2: Contact List -->
+   <section class="side-panel">
+      <app-contact-list [selectedContact]="selectedContact()" (contactSelected)="onSelectContact($event)">
+      </app-contact-list>
+   </section>
+
+   <!-- Panel 3: Chat Area -->
+   <section class="content-panel">
+      <app-chat-area *ngIf="selectedContact()" [contact]="selectedContact()!" (back)="onBack()">
+      </app-chat-area>
+
+      <div *ngIf="!selectedContact()" class="no-selection">
+         <div class="empty-state">
+            <div class="empty-icon">
+               <i class="bi bi-chat-dots"></i>
+            </div>
+            <h2>Select a conversation</h2>
+            <p>Welcome to ByteChat. Select a contact from the left to start messaging.</p>
+         </div>
+      </div>
+   </section>
+</div>
